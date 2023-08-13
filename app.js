@@ -18,6 +18,8 @@ app.use(cors({
   credentials: true,
   origin: ['http://localhost:5173','https://safelockbackend.onrender.com']
 }));
+app.options('*', cors());
+
 
 if (process.env.NODE_ENV === "development") app.use(morgan("dev"));
 
