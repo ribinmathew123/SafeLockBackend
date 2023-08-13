@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
   credentials: true,
-  origin: ['http://localhost:5173','https://safelockbackend.onrender.com']
+  origin: ['http://localhost:5173','https://safelockbackend.onrender.com','https://safe-lock.netlify.app' ]
 }));
 app.options('*', cors());
 
