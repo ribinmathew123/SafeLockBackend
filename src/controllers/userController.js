@@ -12,13 +12,13 @@ export const userSignup = async (req, res) => {
       console.log(req.body);
   
       if (!name || !email || !password) {
-        return res.status(400).json({ message: "Please provide all required fields" });
+        return res.status(400).json({ error: "Please provide all required fields" });
       }
   
       const userExistsByEmail = await User.findOne({ email });
   
       if (userExistsByEmail) {
-        return res.status(400).json({ message: "User with this email already exists" });
+        return res.status(400).json({ error: "User with this email already exists" });
       }
   
       const salt = await bcrypt.genSalt(10);
@@ -53,15 +53,14 @@ export const userSignup = async (req, res) => {
     const { email, password } = req.body;
   console.log(req.body);
     const user = await User.findOne({ email });
-  console.log("user data",user);
     if (!user) {
-      return res.status(400).json({ message: "Incorrect email" });
+      return res.status(400).json({ error: "Incorrect email" });
     }
   
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     
     if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "Incorrect password" });
+      return res.status(400).json({ error: "Incorrect password" });
     }
   
     
