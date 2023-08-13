@@ -9,9 +9,11 @@ import mongoose from 'mongoose';
 export const userSignup = async (req, res) => {
     try {
       const { name, email, password } = req.body;
+      console.log("back end is working");
       console.log(req.body);
   
       if (!name || !email || !password) {
+        console.log("Please provide all required fields");
         return res.status(400).json({ error: "Please provide all required fields" });
       }
   
