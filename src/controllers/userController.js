@@ -77,51 +77,99 @@ export const userSignup = async (req, res) => {
   });
   
   
+  // export const saveData = async (req, res) => {
+  //   try {
+  //     const { userId } = req.params;
+  //     const { password, name } = req.body;
+  //     if (!password || !name ) {
+  //       return res.status(400).json({ error: "Please provide all required fields" });
+  //     }
+
+  //     const userpassword = await Password.findOne({ password });
+  //     const username = await Password.findOne({ name });
+  
+  //     if (userpassword) {
+  //       console.log("User with this email already exists");
+  //       return res.status(400).json({ error: " this password already exists" });
+  //     }
+  
+  //     if (username) {
+  //       console.log("phone number already used");
+  //       return res.status(400).json({ error: " this name already exists" });
+  
+  //     }
+
+
+  //     const newPassword = new Password({
+  //       userId,
+  //       name,
+  //       password,
+  //     });
+  
+  //     await newPassword.save();
+  
+
+  //         const response = await Password.create({ password, name });
+      
+  //         res.status(200).json({ message: "Password saved successfully", data: response });
+  //       } catch (error) {
+  //         console.log(error);
+  //         if (error.code === 11000) {
+  //           res.status(400).json({ error: "Duplicate key error: Password already exists" });
+  //         } else {
+  //           res.status(500).json({ error: "Internal server error" });
+  //         }
+  //       }
+  //     };
+      
+
   export const saveData = async (req, res) => {
     try {
-      const { userId } = req.params;
-      const { password, name } = req.body;
-      if (!password || !name ) {
-        return res.status(400).json({ error: "Please provide all required fields" });
-      }
+        const { userId } = req.params;
+        let { password, name } = req.body;
+       
 
-      const userpassword = await Password.findOne({ password });
-      const username = await Password.findOne({ name });
-  
-      if (userpassword) {
-        console.log("User with this email already exists");
-        return res.status(400).json({ error: " this password already exists" });
-      }
-  
-      if (username) {
-        console.log("phone number already used");
-        return res.status(400).json({ error: " this name already exists" });
-  
-      }
-
-
-      const newPassword = new Password({
-        userId,
-        name,
-        password,
-      });
-  
-      await newPassword.save();
-  
-
-          const response = await Password.create({ password, name });
-      
-          res.status(200).json({ message: "Password saved successfully", data: response });
-        } catch (error) {
-          console.log(error);
-          if (error.code === 11000) {
-            res.status(400).json({ error: "Duplicate key error: Password already exists" });
-          } else {
-            res.status(500).json({ error: "Internal server error" });
-          }
+        if (!password || !name) {
+            return res.status(400).json({ error: "Please provide all required fields" });
         }
-      };
+
+        const trimmedName = name.trim();
+        name=trimmedName;
+        
+
+        const existingPassword = await Password.findOne({ userId, password });
       
+        const existingName = await Password.findOne({ userId, name });
+
+        if (existingPassword) {
+    
+            return res.status(400).json({ error: "This password already exists for the user" });
+        }
+
+        if (existingName) {
+          
+
+            return res.status(400).json({ error: "This name already exists for the user" });
+        }
+
+        const newPassword = new Password({
+            userId,
+            name: trimmedName,
+            password,
+        });
+
+        // await newPassword.save();
+        const response = await Password.create({userId, password, name });
+
+
+        res.status(200).json({ message: "Password saved successfully", data: newPassword });
+    } catch (error) {
+        console.error(error);
+
+              res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 
 
 
